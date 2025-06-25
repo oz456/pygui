@@ -3,6 +3,7 @@ from tkinter import filedialog
 
 
 def browse_file():
+    global current_file
     filepath = filedialog.askopenfilename(
         title="Select a File",
         filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
@@ -18,7 +19,7 @@ def browse_file():
         text_area.config(state=tk.NORMAL)
         text_area.delete('1.0', tk.END) # Clears previous content
         text_area.insert(tk.END, content)
-        text_area.config(state=tk.DISABLED)
+        current_file = filepath
         result_label.config(text="")  # Clears previous result
 
 
@@ -54,7 +55,18 @@ def search_text():
         result_text = f"'{search_term}' not found."
 
     result_label.config(text=result_text)
-    text_area.config(state=tk.DISABLED)
+    text_area.config(state=tk.NORMAL)
+
+def save_file():
+    if not current_file:
+        return
+
+    try:
+        content = text_area.get("1.0", tk.END)
+        with open(current_file, 'w', encoding='utf-8') as file:
+            file.write(content)
+    except Exception:
+        pass
 
 
 
@@ -62,9 +74,11 @@ def search_text():
 
 # Main Window Setup
 root = tk.Tk()
-root.title("Simple File Viewer")
+root.title("Simple File Analyzer")
 root.geometry("700x500")
 
+
+current_file = None
 
 # Browse and Search Controls
 top_frame = tk.Frame(root)
@@ -79,12 +93,15 @@ search_entry.pack(side=tk.LEFT, padx=5)
 search_btn = tk.Button(top_frame, text="Analyze", command=search_text)
 search_btn.pack(side=tk.LEFT, padx=5)
 
+save_btn = tk.Button(top_frame, text="Save", command=save_file)
+save_btn.pack(side=tk.LEFT, padx=5)
+
 
 # Text Area with Scrollbar
 text_frame = tk.Frame(root)
 text_frame.pack(fill="both", expand=True)
 
-text_area = tk.Text(text_frame, wrap="word", state=tk.DISABLED)
+text_area = tk.Text(text_frame, wrap="word")
 text_area.pack(side=tk.LEFT, fill="both", expand=True)
 
 scrollbar = tk.Scrollbar(text_frame, command=text_area.yview)
