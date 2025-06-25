@@ -57,6 +57,7 @@ def search_text():
     result_label.config(text=result_text)
     text_area.config(state=tk.NORMAL)
 
+
 def save_file():
     if not current_file:
         return
@@ -74,7 +75,7 @@ def save_file():
 
 # Main Window Setup
 root = tk.Tk()
-root.title("Simple File Analyzer")
+root.title("File Analyzer")
 root.geometry("700x500")
 
 
@@ -116,7 +117,6 @@ text_area.tag_config("highlight", background="yellow")
 # Result Label
 result_label = tk.Label(root, text="", fg="blue", wraplength=680, justify="left")
 result_label.pack(pady=5)
-
 
 
 
